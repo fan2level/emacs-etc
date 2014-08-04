@@ -2,6 +2,8 @@
   "return string pointed by word
 
 "
+
+test for test
   (save-excursion
     (let ((begin)
 	  (end)
@@ -20,17 +22,18 @@
   )
 
 (defun highlight-select-word (&optional string)
-  "highlight word"
+  "highlight select word"
   (interactive)
   (require 'hi-lock)
   (let ((select-word)
+	(exclude-chars "")
 	(word (select-word string))
 	)
 
     (cond ((null word) (error "you can't select exclude characters"))
 	  ((= (length word) 1) (error "you should select more a characters"))
 	  (t 
-	   (setq select-word (concat "\\<" word "\\>"))
+	   (setq select-word (concat exclude-chars word exclude-chars))
 	   (if (null (assoc select-word hi-lock-interactive-patterns))
 	       (highlight-regexp select-word)
 	     (unhighlight-regexp select-word))
