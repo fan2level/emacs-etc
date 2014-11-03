@@ -75,7 +75,10 @@ return result buffer which name is `glistup-mode-buffer-name'"
 
     (switch-to-buffer (get-buffer-create glistup-mode-buffer-name))
     (dolist (elt glistup-files)
-      (if (string-match patterni (file-name-nondirectory elt))
+      ;; (if (string-match patterni (file-name-nondirectory elt))
+      (if (string-match 
+	   (rx-to-string `(: bos ,patterni) t)
+	   (file-name-nondirectory elt))
 	  (insert elt "\n")
        )
       )
@@ -106,25 +109,28 @@ return result buffer which name is `glistup-mode-buffer-name'"
   "glistup-mode Major Moode
 listup files in gtags-mode"
   (interactive)
-  (setq glistup-mode-pattern nil)
-  (setq glistup-files nil)
+  (if (not (gtags-get-rootpath))
+      (error "no tags file")
+    (setq glistup-mode-pattern nil)
+    (setq glistup-files nil)
 
-  (if (get-buffer glistup-mode-buffer-name)
-      (glistup-kill-buffer))
+    (if (get-buffer glistup-mode-buffer-name)
+	(glistup-kill-buffer))
 
-  (switch-to-buffer (glistup-listup pattern))
-  (setq buffer-read-only t)
+    (switch-to-buffer (glistup-listup pattern))
+    (setq buffer-read-only t)
 
-  (goto-char (point-min))
-  (beginning-of-line)
+    (goto-char (point-min))
+    (beginning-of-line)
 
-  (kill-all-local-variables)
-  (use-local-map glistup-mode-map)
+    (kill-all-local-variables)
+    (use-local-map glistup-mode-map)
 
-  (setq
-   major-mode 'glistup-mode
-   mode-name "glistup-mode")
-  (run-hooks 'glistup-mode-hook)
+    (setq
+     major-mode 'glistup-mode
+     mode-name "glistup-mode")
+    (run-hooks 'glistup-mode-hook)
+    )
   )
 
 (defun glistup-mode-self-insert-command ()
