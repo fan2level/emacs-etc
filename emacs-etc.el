@@ -1,3 +1,15 @@
+(defun lcd-timing-do (hpw hbp width hfp vs vbp height vfp &optional refresh)
+  "calculate lcd vsync hsync pixel-clock, frequency"
+  (interactive)
+  (let ((pixel-clock)
+	(frequency)
+	(refresh (or refresh 1))
+	)
+    (setq pixel-clock (* (+ hpw hbp width hfp) (+ vs vbp height vfp) refresh))
+    (setq frequency (/ 1.0 pixel-clock))
+    (message "pixel-clock : %d\nfrequency : %g" pixel-clock frequency)
+    ))
+
 (defun select-word (&optional string)
   "return string pointed by word
 
