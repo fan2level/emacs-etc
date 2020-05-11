@@ -69,3 +69,30 @@
 	   ))
     )
   )
+
+(defun ci (ratio years fund &optional capital)
+  "복리계산(compound-interest)
+2020년을 투자 원년으로 한다
+`ratio' 연이자율(%) : 2 ( 2%)
+`years' 투자기간(년): 10(10년)
+`(expt 이율 투자기간)' = 투자수익율
+`(log 투자수익율 이율)' = 투자기간
+"
+  (interactive "n이율: \nn투자기간: \nn월납입액: ")
+  (with-help-window "*복리계산*"
+    (let ((year 0)
+	  (ratio (/ ratio 100.0))
+	  (ratio-accumulate)
+          (capital (or capital 0))
+	  (fund (* fund 12))
+	  )
+      (princ (format "투자기간(%02d년) 원금(%d원) 월납입액(%d원) 연이율(%.2f)\n" years capital fund ratio))
+      (while (< year years)
+	(setq ratio-accumulate (expt (+ 1 ratio) year))
+	(setq capital (+ capital fund))
+	(princ (format "%3d년 %10d %10d %3.2f\n" (+ 2020 year) capital (* capital ratio-accumulate) ratio-accumulate))
+	(setq year (+ year 1))
+	)
+      )
+    )
+  )
