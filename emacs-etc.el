@@ -75,8 +75,8 @@
 2020년을 투자 원년으로 한다
 `ratio' 연이자율(%) : 2 ( 2%)
 `years' 투자기간(년): 10(10년)
-`(expt 이율 투자기간)' = 투자수익율
-`(log 투자수익율 이율)' = 투자기간
+`(expt 여이율 투자기간)' = 투자수익율
+`(log 투자수익율 연이율)' = 투자기간
 "
   (interactive "n이율: \nn투자기간: \nn월납입액: ")
   (with-help-window "*복리계산*"
@@ -84,15 +84,24 @@
 	  (ratio (/ ratio 100.0))
 	  (ratio-accumulate)
           (capital (or capital 0))
-	  (fund (* fund 12))
 	  )
-      (princ (format "투자기간(%02d년) 원금(%d원) 월납입액(%d원) 연이율(%.2f)\n" years capital fund ratio))
+      ;; (princ (format "투자기간(%02d년) 원금(%d원) 월납입액(%d원) 연이율(%.2f)\n" years capital fund (* ratio 100)))
+      (princ "=================================\n")
       (while (< year years)
 	(setq ratio-accumulate (expt (+ 1 ratio) year))
-	(setq capital (+ capital fund))
+	(setq capital (+ capital (* fund 12)))
 	(princ (format "%3d년 %10d %10d %3.2f\n" (+ 2020 year) capital (* capital ratio-accumulate) ratio-accumulate))
 	(setq year (+ year 1))
 	)
+      (princ "=================================\n")
+      (princ (format "투자기간: %10d(년)\n" years))
+      (princ (format "원금    : %10d(원)\n" capital))
+      (princ (concat (format "연이율  : %10.2f" (* ratio 100)) "(%)\n"))
+      (princ "---------------------------------\n")
+      (princ (format "평가금  : %10d(원)\n" (* capital ratio-accumulate)))
+      (princ (concat (format "수익율  : %10.2f" (* (- ratio-accumulate 1) 100)) "(%)\n"))
+      (princ (format "수익금  : %10d(원)\n" (- (* capital ratio-accumulate) capital)))
+      (princ "=================================\n")
       )
     )
   )
