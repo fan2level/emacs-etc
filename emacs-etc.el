@@ -106,3 +106,34 @@
       )
     )
   )
+
+(defun tax (earning type &optional exemption)
+  "`type' : 세율
+  0 : 보통세율 : 소득세(14%) + 농특세(1.4%) = 15.4%
+  1 : 저과세 : 소득세(0%) + 농특세(1.4%) = 1.4% (농협,수협,신협등 한도 3000만원)
+  2 : 세금우대 : 소득세( 9%) + 농특세(0.5%) =  9.5%
+`exemption' : 비과세한도
+  "
+  (with-help-window "*세금*"
+    (let ((비과세한도 (or exemption 0))
+	  (세율)
+	  (earning1))
+      (cond ((eq type 0) (progn
+			   (setq 세율 15.4)
+			   (setq tax (* (- earning 비과세한도) (/ 세율 100)))))
+	    ((eq type 1) (progn
+			   (setq 세율 1.4)
+			   (setq tax (* (- earning 비과세한도) (/ 세율 100)))))
+	    ((eq type 2) (progn
+			   (setq 세율 9.5)
+			   (setq tax (* (- earning 비과세한도) (/ 세율 100)))))
+	    )
+      (princ "=================================\n")
+      (princ (format "수익금 : %10d(원)\n" earning))
+      (princ (concat (format "세율   : %10.2f" 세율) "(%)\n"))
+      (princ (format "비과세한도 : %10d(원)\n" 비과세한도))
+      (princ (format "세금   : %10d(원)\n" tax))
+      (princ "=================================\n")
+      )
+    )
+  )
