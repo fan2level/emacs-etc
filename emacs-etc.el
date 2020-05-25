@@ -93,7 +93,6 @@
 	(setq capital (+ capital fund))
 	(setq total (* (+ total fund) (+ 1 ratio)))
 
-	;; (princ (format "%3d년 %10d %10d %3.2f\n" (+ 2020 year) capital (* capital ratio-accumulate) ratio-accumulate))
 	(princ (format "%3d %10d %10d %3.2f %3.2f\n" year capital total ratio-accumulate (/ total capital)))
 	
 	(setq year (+ year 1))
