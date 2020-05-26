@@ -82,18 +82,16 @@
   (with-help-window "*복리계산*"
     (let ((year 1)
 	  (ratio (/ ratio 100.0))
-	  (ratio-accumulate)
           (capital (or capital 0))
 	  (total (or capital 0))
 	  )
       (princ "=================================\n")
       ;; 횟수 원금 평가금 이율
       (while (<= year years)
-	(setq ratio-accumulate (expt (+ 1 ratio) year))
 	(setq capital (+ capital fund))
 	(setq total (* (+ total fund) (+ 1 ratio)))
 
-	(princ (format "%3d %10d %10d %3.2f %3.2f\n" year capital total ratio-accumulate (/ total capital)))
+	(princ (format "%3d %10d %10d %3.2f\n" year capital total (/ total capital)))
 	
 	(setq year (+ year 1))
 	)
@@ -103,10 +101,10 @@
       (princ (concat (format "연이율  : %10.2f" (* ratio 100)) "(%)\n"))
       (princ "---------------------------------\n")
       (princ (format "평가금  : %10d(원)\n" total))
-      (princ (concat (format "수익율  : %10.2f" (* (- ratio-accumulate 1) 100)) "(%)\n"))
+      (princ (concat (format "수익율  : %10.2f" (* (- (/ total capital) 1) 100)) "(%)\n"))
       (princ (format "수익금  : %10d(원)\n" (- total capital)))
       (princ "=================================\n")
-      total
+      (- total capital)
       )
     )
   )
